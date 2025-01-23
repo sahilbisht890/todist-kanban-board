@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  padding: 0;
+  margin: 0;
+}
+
+.ant-card {
+  box-shadow: 0 0.1rem 0.4rem rgba(0, 0, 0, 0.55555555) !important;
+}
+
+.ant-avatar {
+  width: 90px;
+  height: 90px;
+}
+
+.ant-segmented-item-selected {
+  background-color: rgb(211, 43, 43) !important;
+  color : white !important
+}
+
+.cardShadow {
+  box-shadow: 0 .1rem .4rem rgba(0,0,0,.556)!important
+}
+.ant-input-outlined:hover {
+  border-color: red !important;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
