@@ -1,5 +1,5 @@
 import React from "react";
-import TaskCard from "./taskCard";
+import TaskCard from "./TaskCard";
 
 const CardView = ({ tasks, onEdit, onDelete }) => {
   return (
