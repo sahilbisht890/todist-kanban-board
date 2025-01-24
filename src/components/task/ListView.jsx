@@ -158,11 +158,10 @@ const DraggableTask = ({ task , onEdit , onDelete }) => {
               onClick={() => onDelete(task)}
             />
       </div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-start items-center">
         <h4 className="font-semibold text-red-700 text-sm md:text-base">
           {task.title}
         </h4>
-        <div>{priorityIcons[task.priority]}</div>
       </div>
       <p className="text-xs md:text-sm text-gray-600">{task.description}</p>
       <div className="flex items-start md:items-center flex-col md:flex-row gap-0 md:gap-2  mt-1">
@@ -181,8 +180,11 @@ const DraggableTask = ({ task , onEdit , onDelete }) => {
           </div>
         </div>
       </div>
-      <div className="flex gap-2 items-center justify-end mt-2">
-        <Tooltip title={"Due Date"}>
+      <div className="flex gap-2 items-center justify-between mt-2">
+       <Tooltip title={task.priority}>
+       <div>{priorityIcons[task.priority]}</div>
+       </Tooltip>
+        <Tooltip className="flex gap-2 items-center" title={"Due Date"}>
         <IconClockFilled size={18} className="text-gray-700" />{" "}
         <div className="text-sm">
           {dayjs(task.dueDate).format("DD MMM, YYYY")}
