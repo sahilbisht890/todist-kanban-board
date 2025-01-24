@@ -12,25 +12,25 @@ const BoardCard = ({ board, onClick }) => {
 
       <div className="bg-red-100 flex flex-col sm:flex-row justify-between gap-4 p-4 rounded-lg transition-colors duration-300 hover:bg-red-200">
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col">
-            <div className="text-gray-600 font-semibold">Total Tasks</div>
+          <div className="flex flex-row md:flex-col">
+            <div className="text-gray-600 font-semibold">Total Tasks : </div>
             <div className="text-gray-800 font-bold">{board.totalTasks}</div>
           </div>
-          <div className="flex flex-col">
-            <div className="text-gray-600 font-semibold ">To Do</div>
+          <div className="flex flex-row md:flex-col ">
+            <div className="text-gray-600 font-semibold ">To Do : </div>
             <div className="text-gray-800 font-bold">{board.todoTasks}</div>
           </div>
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col">
-            <div className="text-gray-600 font-semibold">In Progress</div>
+          <div className="flex flex-row md:flex-col">
+            <div className="text-gray-600 font-semibold">In Progress : </div>
             <div className="text-gray-800 font-bold">
               {board.inProgressTasks}
             </div>
           </div>
-          <div className="flex flex-col">
-            <div className="text-gray-600 font-semibold">Done Task</div>
+          <div className="flex flex-row md:flex-col">
+            <div className="text-gray-600 font-semibold">Done Task : </div>
             <div className="text-gray-800 font-bold">{board.doneTasks}</div>
           </div>
         </div>
