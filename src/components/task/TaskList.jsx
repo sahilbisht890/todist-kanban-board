@@ -151,7 +151,7 @@ const TaskList = () => {
               <h2 className="text-xl font-bold ml-2">{ProjectName}</h2>
             </div>
 
-            <div className="flex gap-4 items-center sm:mt-2 mt-0 justify-between w-full md:w-auto">
+            <div className="flex gap-4 items-center mt-2 md:mt-0 justify-between w-full md:w-auto">
               <button
                 className="text-red-700 border-2 border-red-700 p-1 bg-white hover:bg-red-700  hover:text-white text-base rounded-md font-medium  hover:scale-105 transition-all ease-in-out"
                 onClick={handleCreate}
