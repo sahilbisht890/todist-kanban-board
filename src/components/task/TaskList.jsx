@@ -179,20 +179,21 @@ const TaskList = () => {
               </div>
             </div>
           </div>
-
-          <div>
-            {view === "card" ? (
-              <CardView
-                tasks={taskListData || []}
-                onEdit = {handleOnEdit}
-                onDelete = {handleOnDelete}
-              />
-            ) : (
-              <ListView
-                tasks={taskListData || []}
-              />
-            )}
-          </div>
+                {
+                  !taskListLoading && <div>
+                  {view === "card" ? (
+                    <CardView
+                      tasks={taskListData || []}
+                      onEdit = {handleOnEdit}
+                      onDelete = {handleOnDelete}
+                    />
+                  ) : (
+                    <ListView
+                      tasks={taskListData || []}
+                    />
+                  )}
+                </div>
+                }
         </div>
       </div>
     </>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DoubleRightOutlined, PauseOutlined } from "@ant-design/icons";
@@ -8,10 +8,19 @@ import axiosInstance from "../../utils/axios";
 
 const ListView = ({ tasks, handleFetchTaskList }) => {
   const [columns, setColumns] = useState({
-    "To-Do": tasks.filter((task) => task.status === "to-do"),
-    "In-Progress": tasks.filter((task) => task.status === "in-progress"),
-    Done: tasks.filter((task) => task.status === "done"),
+    "To-Do" : [],
+    "In-Progress" : [],
+    "Done" : []
   });
+
+
+  useEffect(() => {
+      setColumns({
+        "To-Do": tasks.filter((task) => task.status === "to-do"),
+        "In-Progress": tasks.filter((task) => task.status === "in-progress"),
+        "Done": tasks.filter((task) => task.status === "done"),
+      })
+  } , [tasks])
 
   const updateTaskStatus = async (task, targetStatus) => {
     try {
