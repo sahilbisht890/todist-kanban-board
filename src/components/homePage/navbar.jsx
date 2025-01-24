@@ -4,13 +4,13 @@ import {
   IconCaretDownFilled,
   IconUserCircle
 } from "@tabler/icons-react";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ModalContext } from "../../context";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { logoutUser } from "../../store/actions/user";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , useLocation } from "react-router-dom";
 import { Dropdown, Menu, Button } from "antd";
 
 const Navbar = () => {
@@ -18,8 +18,35 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loginVisible, setLoginVisible, signupVisible, setSignupVisible } =
-    useContext(ModalContext);
+  const location = useLocation();
+
+  const { loginVisible, setLoginVisible, signupVisible, setSignupVisible, featuresRef, pricingRef } = useContext(ModalContext);
+
+    
+  const handleFeatureClick = () => {
+    if (location.pathname !== "/") {
+      navigate("/", { state: { scrollTo: "features" } });
+    } else {
+      featuresRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const handlePricingClick = () => {
+    if (location.pathname !== "/") {
+      navigate("/", { state: { scrollTo: "pricing" } });
+    } else {
+      pricingRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  useEffect(() => {
+    if (location.state?.scrollTo === "features" && featuresRef.current) {
+      featuresRef.current.scrollIntoView({ behavior: "smooth" });
+    } else if (location.state?.scrollTo === "pricing" && pricingRef.current) {
+      pricingRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [location]);
+
 
   const handleLogout = async () => {
     try {
@@ -34,6 +61,8 @@ const Navbar = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+  
+
 
   return (
     <div className="w-full py-5 px-8">
@@ -70,10 +99,14 @@ const Navbar = () => {
           >
             Dashboard
           </NavLink>
-          <div className="text-base font-medium cursor-pointer hover:text-red-600  hover:border-b-2 hover:border-red-600">
+          <div className="text-base font-medium cursor-pointer hover:text-red-600  hover:border-b-2 hover:border-red-600"
+          onClick={handleFeatureClick}
+          >
             Features
           </div>
-          <div className="text-base font-medium cursor-pointer hover:text-red-600 hover:border-b-2 hover:border-red-600">
+          <div className="text-base font-medium cursor-pointer hover:text-red-600 hover:border-b-2 hover:border-red-600"
+          onClick={handlePricingClick}
+          >
             Pricing
           </div>
           {!isAuthenticated && (
@@ -140,8 +173,15 @@ const Navbar = () => {
               Start for free
             </div>
           )}
-          <div className="text-lg font-medium cursor-pointer">Features</div>
-          <div className="text-lg font-medium cursor-pointer">Pricing</div>
+          
+          <NavLink
+            to="/dashboard"
+            className="text-lg font-medium cursor-pointer"
+          >
+            Dashboard
+          </NavLink>
+          <div className="text-lg font-medium cursor-pointer" onClick={handleFeatureClick}>Features</div>
+          <div className="text-lg font-medium cursor-pointer" onClick={handlePricingClick}>Pricing</div>
           {isAuthenticated ? (
             <div
               className="text-lg font-medium cursor-pointer"

@@ -21,10 +21,7 @@ const Board = () => {
   };
 
   useEffect(() => {
-    if (!apiCalled.current && !boardList) {
-      apiCalled.current = true;
       dispatch(fetchBoardsList());
-    }
   }, []);
 
   const onClose = () => {

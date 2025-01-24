@@ -5,14 +5,15 @@ import {
   IconBrandAppleFilled,
 } from "@tabler/icons-react";
 import { ModalContext } from "../../context";
-import { useContext } from "react";
+import { useContext} from "react";
 import { useSelector } from "react-redux";
 import Pricing from "./pricing";
 import Features from "./features";
 
 const Content = () => {
-  const { setSignupVisible } = useContext(ModalContext);
+  const { setSignupVisible , featuresRef, pricingRef } = useContext(ModalContext);
   const {userInfo , isAuthenticated} = useSelector((state) => state.user);
+
 
 
   return (
@@ -77,8 +78,8 @@ const Content = () => {
         </div>
       </div>
     </div>
-    <Pricing/>
-    <Features/>
+    <Pricing ref={pricingRef} />
+    <Features ref={featuresRef} />
     </>
   );
 };
