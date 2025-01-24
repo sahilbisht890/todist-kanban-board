@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DoubleRightOutlined, PauseOutlined } from "@ant-design/icons";
-import { IconClockFilled } from "@tabler/icons-react";
+import { IconClockFilled , IconEdit , IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import axiosInstance from "../../utils/axios";
+import { Tooltip } from "antd";
 
-const ListView = ({ tasks, handleFetchTaskList }) => {
+const ListView = ({ tasks, handleFetchTaskList , onEdit , onDelete }) => {
   const [columns, setColumns] = useState({
     "To-Do" : [],
     "In-Progress" : [],
@@ -71,6 +72,8 @@ const ListView = ({ tasks, handleFetchTaskList }) => {
             status={status}
             tasks={columns[status]}
             moveTask={moveTask}
+            onEdit={onEdit}
+            onDelete={onDelete}
           />
         ))}
       </div>
@@ -78,7 +81,7 @@ const ListView = ({ tasks, handleFetchTaskList }) => {
   );
 };
 
-const Column = ({ status, tasks, moveTask }) => {
+const Column = ({ status, tasks, moveTask , onEdit , onDelete }) => {
   const [, drop] = useDrop({
     accept: "TASK",
     drop: (item) => moveTask(item, status),
@@ -115,13 +118,13 @@ const Column = ({ status, tasks, moveTask }) => {
           </p>
         </div>
       ) : (
-        tasks.map((task) => <DraggableTask key={task._id} task={task} />)
+        tasks.map((task) => <DraggableTask key={task._id} task={task}  onEdit={onEdit}  onDelete={onDelete} />)
       )}
     </div>
   );
 };
 
-const DraggableTask = ({ task }) => {
+const DraggableTask = ({ task , onEdit , onDelete }) => {
   const [{ isDragging }, drag] = useDrag({
     type: "TASK",
     item: task,
@@ -139,10 +142,22 @@ const DraggableTask = ({ task }) => {
   return (
     <div
       ref={drag}
-      className={`p-4 border rounded  bg-white mb-2 cardShadow ${
+      className={`p-4 border rounded  bg-white mb-2 cursor-pointer cardShadow ${
         isDragging ? "opacity-50" : ""
       }`}
     >
+      <div className="flex gap-2 justify-end items-center">
+            <IconEdit
+              size={18}
+              className="text-blue-600 cursor-pointer hover:scale-110 transition-transform"
+              onClick={() => onEdit(task)}
+            />
+            <IconTrash
+              size={18}
+              className="text-red-600 cursor-pointer hover:scale-110 transition-transform"
+              onClick={() => onDelete(task)}
+            />
+      </div>
       <div className="flex justify-between items-center">
         <h4 className="font-semibold text-red-700 text-sm md:text-base">
           {task.title}
@@ -167,10 +182,12 @@ const DraggableTask = ({ task }) => {
         </div>
       </div>
       <div className="flex gap-2 items-center justify-end mt-2">
+        <Tooltip title={"Due Date"}>
         <IconClockFilled size={18} className="text-gray-700" />{" "}
         <div className="text-sm">
           {dayjs(task.dueDate).format("DD MMM, YYYY")}
         </div>
+        </Tooltip>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import {
 } from "@tabler/icons-react";
 import { DoubleRightOutlined, PauseOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
+import { Tooltip } from "antd";
 
 const TaskCard = ({ task, onEdit, onDelete }) => {
   const priorityColor = {
@@ -44,12 +45,15 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
     <div className="px-4 pt-2 pb-4 border rounded cardShadow bg-gradient-to-r from-red-100 to-red-300">
       <div className="flex justify-end items-center">
         <div className="flex items-center gap-4">
+          <Tooltip title={"Due Date"}>
           <div className="flex gap-2 items-center">
             <IconClockFilled size={19} className="text-gray-600" />
             <div className="text-sm text-gray-600 font-semibold">
               {dayjs(task.dueDate).format("DD MMM, YYYY")}
             </div>
           </div>
+          </Tooltip>
+
           <div className="flex gap-2 items-center">
             <IconEdit
               size={20}

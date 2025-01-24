@@ -190,6 +190,9 @@ const TaskList = () => {
                   ) : (
                     <ListView
                       tasks={taskListData || []}
+                      handleFetchTaskList={handleFetchTaskList}
+                      onEdit = {handleOnEdit}
+                      onDelete = {handleOnDelete}
                     />
                   )}
                 </div>
