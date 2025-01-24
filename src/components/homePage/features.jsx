@@ -1,11 +1,8 @@
 import React from "react";
 import { useInView } from "react-intersection-observer";
 
-const Features = () => {
-  const { ref, inView } = useInView({
-    triggerOnce: true,
-    threshold: 0.3,
-  });
+const Features = ({featuresRef}) => {
+const inView = true ;
 
   const featuresData = [
     {
@@ -32,7 +29,7 @@ const Features = () => {
 
   return (
     <div
-      ref={ref}
+      ref={featuresRef}
       className={`min-h-screen flex flex-col items-center justify-center px-4 py-10 md:py-16 lg:py-20 transition-opacity duration-1000 ${
         inView ? "opacity-100" : "opacity-0"
       }`}

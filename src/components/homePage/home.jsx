@@ -78,8 +78,8 @@ const Content = () => {
         </div>
       </div>
     </div>
-    <Pricing ref={pricingRef} />
-    <Features ref={featuresRef} />
+    <Pricing pricingRef={pricingRef} />
+    <Features featuresRef={featuresRef} />
     </>
   );
 };

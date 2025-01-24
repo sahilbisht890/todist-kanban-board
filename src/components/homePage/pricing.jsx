@@ -1,7 +1,6 @@
 import React from "react";
 
-const Pricing = () => {
-  // Pricing plan data
+const Pricing = ({pricingRef}) => {
   const plans = [
     {
       title: "Basic",
@@ -28,7 +27,7 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center mt-4 p-6">
+    <div ref={pricingRef} className="min-h-screen flex flex-col items-center justify-center mt-4 p-6">
       <div className="text-center mb-14">
         <h1 className="text-4xl font-bold text-red-600 md:text-5xl">
           Choose Your Plan
