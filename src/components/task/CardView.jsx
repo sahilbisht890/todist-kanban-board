@@ -1,5 +1,6 @@
 import React from "react";
 import TaskCard from "./TaskCard";
+import noData from "../../assets/no-data.svg"
 
 const CardView = ({ tasks, onEdit, onDelete }) => {
   return (
@@ -7,7 +8,7 @@ const CardView = ({ tasks, onEdit, onDelete }) => {
       {tasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center mt-10">
           <img
-            src="/images/no-data.svg"
+            src={noData}
             alt="No Data"
             className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56"
           />

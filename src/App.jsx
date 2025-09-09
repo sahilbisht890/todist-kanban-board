@@ -1,10 +1,10 @@
 import "./App.css";
-import Content from "./components/homePage/home";
 import Layout from "./components/layout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import TaskList from "./components/task/TaskList";
 import Board from "./components/board";
 import AuthGuard from "./utils/authGuard"
+import HomePage from "./components/page/home";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
           <Router>
             <Layout>
               <Routes>
-                <Route path="/" element={<Content />} />
+                <Route path="/" element={<HomePage />} />
                 <Route path="/task/:id" element={
                   <AuthGuard>
                         <TaskList/>

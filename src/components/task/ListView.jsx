@@ -6,6 +6,8 @@ import { IconClockFilled , IconEdit , IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import axiosInstance from "../../utils/axios";
 import { Tooltip } from "antd";
+import noData from "../../assets/no-data.svg"
+
 
 const ListView = ({ tasks, handleFetchTaskList , onEdit , onDelete }) => {
   const [columns, setColumns] = useState({
@@ -109,7 +111,7 @@ const Column = ({ status, tasks, moveTask , onEdit , onDelete }) => {
       {tasks.length === 0 ? (
         <div className="flex flex-col h-fit items-center justify-center">
           <img
-            src="/images/no-data.svg"
+            src={noData}
             alt="No Data"
             className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28"
           />
