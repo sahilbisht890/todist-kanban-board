@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, DatePicker, Button } from "antd";
+import { Modal, Form, Input, Select, DatePicker, Button, App, ConfigProvider } from "antd";
 import dayjs from "dayjs";
 import axiosInstance from "../../utils/axios";
+import Loader from "../common/loader";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -16,23 +17,26 @@ const AddTaskModal = ({
 }) => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
+  const { message } = App.useApp();
 
   useEffect(() => {
-    if (actionType === "edit" && taskDetails) {
-      form.setFieldsValue({
-        title: taskDetails.title,
-        description: taskDetails.description,
-        dueDate: taskDetails.dueDate ? dayjs(taskDetails.dueDate) : null,
-        priority: taskDetails.priority || "medium",
-        status: taskDetails.status || "to-do",
-      });
-    } else {
-      form.resetFields();
-      form.setFieldsValue({
-        priority: "medium",
-      });
+    if (visible) {
+      if (actionType === "edit" && taskDetails) {
+        form.setFieldsValue({
+          title: taskDetails.title,
+          description: taskDetails.description,
+          dueDate: taskDetails.dueDate ? dayjs(taskDetails.dueDate) : null,
+          priority: taskDetails.priority || "medium",
+          status: taskDetails.status || "to-do",
+        });
+      } else {
+        form.resetFields();
+        form.setFieldsValue({
+          priority: "medium",
+        });
+      }
     }
-  }, [taskDetails, actionType, form]);
+  }, [taskDetails, actionType, form, visible]);
 
   const handleSubmit = async (values) => {
     setIsLoading(true);
@@ -40,19 +44,21 @@ const AddTaskModal = ({
       if (actionType === "edit") {
         await handleEditTask({
           ...values,
-          dueDate: values.dueDate.format("YYYY-MM-DD"),
+          dueDate: values.dueDate ? values.dueDate.format("YYYY-MM-DD") : null,
         });
       } else {
         await handleCreateTask({
           title: values.title,
           description: values.description || "",
-          dueDate: values.dueDate.format("YYYY-MM-DD"),
+          dueDate: values.dueDate ? values.dueDate.format("YYYY-MM-DD") : null,
           priority: values.priority,
         });
       }
       onClose();
+      message.success(`Task ${actionType === 'edit' ? 'updated' : 'created'} successfully!`);
     } catch (error) {
-      console.error(`Error ${actionType === "edit" ? "editing" : "creating"} task:`,error);
+      console.error(`Error ${actionType === "edit" ? "editing" : "creating"} task:`, error);
+      message.error(`Failed to ${actionType === 'edit' ? 'update' : 'create'} task`);
     } finally {
       setIsLoading(false);
     }
@@ -60,11 +66,11 @@ const AddTaskModal = ({
 
   const handleEditTask = async (data) => {
     try {
-      const response = await axiosInstance.put( `/tasks/update?taskId=${taskDetails._id}`, data);
+      await axiosInstance.put(`/tasks/update?taskId=${taskDetails._id}`, data);
       await handleFetchTaskList();
-      console.log("Updated Successfully");
     } catch (error) {
-      console.error("Error updating task status:", error);
+      console.error("Error updating task:", error);
+      throw error;
     }
   };
 
@@ -78,113 +84,148 @@ const AddTaskModal = ({
   };
 
   return (
-    <Modal
-      title={
-        <div className="text-xl font-bold text-red-600 text-center">
-          {actionType === "edit" ? "Edit Task" : "Create Task"}
-        </div>
-      }
-      visible={visible}
-      onCancel={onClose}
-      footer={null}
-      className="rounded-lg overflow-hidden relative"
-      maskClosable={false}
+    <ConfigProvider
+      theme={{
+        components: {
+          Modal: {
+            contentBg: "#fff",
+            headerBg: "#fff",
+            titleColor: "#1f2937",
+            titleFontSize: 18,
+          },
+        },
+      }}
     >
-      {isLoading && (
-        <div className="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center z-[2000]">
-          <div className="loader border-t-4 border-red-600 w-12 h-12 rounded-full animate-spin"></div>
-        </div>
-      )}
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        initialValues={{
-          priority: "medium",
+      <Modal
+        title={actionType === "edit" ? "Edit Task" : "Create New Task"}
+        open={visible}
+        onCancel={onClose}
+        footer={null}
+        centered={true} // This ensures the modal is centered
+        maskClosable={false}
+        width={400}
+        classNames={"p-3"}
+        styles={{
+          header: { 
+            borderBottom: '1px solid #e5e7eb',
+            marginBottom: '16px',
+            textAlign: 'center'
+          }
         }}
+        className="rounded-xl shadow-lg"
       >
-        <Form.Item
-          name="title"
-          label={<span className="font-semibold">Title</span>}
-          rules={[
-            { required: true, message: "Please enter the task title!" },
-            { max: 50, message: "Title cannot exceed 50 characters." },
-          ]}
+        {isLoading && <Loader message={actionType === "edit" ? "Updating task..." : "Creating task..."} />}
+        
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={{
+            priority: "medium",
+          }}
+          className="space-y-4"
         >
-          <Input placeholder="Enter task title" />
-        </Form.Item>
-
-        <Form.Item
-          name="description"
-          label={<span className="font-semibold">Description</span>}
-          rules={[
-            { max: 200, message: "Description cannot exceed 200 characters." },
-          ]}
-        >
-          <TextArea rows={3} placeholder="Enter task description (optional)" />
-        </Form.Item>
-
-        <Form.Item
-          name="dueDate"
-          label={<span className="font-semibold">Due Date</span>}
-          rules={[{ required: true, message: "Please select a due date!" }]}
-        >
-          <DatePicker
-            format="DD MMM YYYY"
-            disabledDate={disabledDate}
-            className="w-full"
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="priority"
-          label={<span className="font-semibold">Priority</span>}
-          rules={[{ required: true, message: "Please select a priority!" }]}
-        >
-          <Select placeholder="Select priority">
-            <Option value="low">Low</Option>
-            <Option value="medium">Medium</Option>
-            <Option value="high">High</Option>
-          </Select>
-        </Form.Item>
-
-        {actionType === "edit" && (
           <Form.Item
-            name="status"
-            label={<span className="font-semibold">Status</span>}
-            rules={[{ required: true, message: "Please select a status!" }]}
+            name="title"
+            label={<span className="font-medium text-gray-700">Title</span>}
+            rules={[
+              { required: true, message: "Please enter the task title!" },
+              { max: 50, message: "Title cannot exceed 50 characters." },
+            ]}
           >
-            <Select placeholder="Select status">
-              <Option value="to-do">To-Do</Option>
-              <Option value="in-progress">In-Progress</Option>
-              <Option value="done">Done</Option>
+            <Input 
+              placeholder="Enter task title" 
+              className="p-2 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="description"
+            label={<span className="font-medium text-gray-700">Description</span>}
+            rules={[
+              { max: 200, message: "Description cannot exceed 200 characters." },
+            ]}
+          >
+            <TextArea 
+              rows={3} 
+              placeholder="Enter task description (optional)" 
+              className="rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="dueDate"
+            label={<span className="font-medium text-gray-700">Due Date</span>}
+            rules={[{ required: true, message: "Please select a due date!" }]}
+          >
+            <DatePicker
+              format="DD MMM YYYY"
+              disabledDate={disabledDate}
+              className="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-400"
+              size="large"
+              placeholder="Select due date"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="priority"
+            label={<span className="font-medium text-gray-700">Priority</span>}
+            rules={[{ required: true, message: "Please select a priority!" }]}
+          >
+            <Select 
+              placeholder="Select priority" 
+              className="rounded-lg border-gray-300"
+              size="large"
+            >
+              <Option value="low">Low</Option>
+              <Option value="medium">Medium</Option>
+              <Option value="high">High</Option>
             </Select>
           </Form.Item>
-        )}
 
-        <Form.Item>
-          <div className="flex justify-end gap-2">
-            <Button
-              className="text-red-600 border border-red-600 bg-white hover:scale-105"
-              onClick={onClose}
+          {actionType === "edit" && (
+            <Form.Item
+              name="status"
+              label={<span className="font-medium text-gray-700">Status</span>}
+              rules={[{ required: true, message: "Please select a status!" }]}
             >
-              Cancel
-            </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg transition-all duration-300"
-            >
-              {isLoading
-                ? "Loading..."
-                : actionType === "edit"
-                ? "Update Task"
-                : "Create Task"}
-            </Button>
-          </div>
-        </Form.Item>
-      </Form>
-    </Modal>
+              <Select 
+                placeholder="Select status" 
+                className="rounded-lg border-gray-300"
+                size="large"
+              >
+                <Option value="to-do">To-Do</Option>
+                <Option value="in-progress">In-Progress</Option>
+                <Option value="done">Done</Option>
+              </Select>
+            </Form.Item>
+          )}
+
+          <Form.Item className="mb-0">
+            <div className="flex flex-col sm:flex-row gap-3 justify-end">
+              <Button
+                onClick={onClose}
+                className="border-gray-300 text-gray-600 hover:text-gray-700 hover:border-gray-400 h-10 font-medium order-2 sm:order-1"
+                size="large"
+                disabled={isLoading}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="bg-blue-500 hover:bg-blue-600 border-blue-500 text-white h-10 font-medium order-1 sm:order-2"
+                size="large"
+                loading={isLoading}
+              >
+                {actionType === "edit" ? "Update Task" : "Create Task"}
+              </Button>
+            </div>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </ConfigProvider>
   );
 };
 

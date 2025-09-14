@@ -1,38 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { DoubleRightOutlined, PauseOutlined } from "@ant-design/icons";
-import { IconClockFilled , IconEdit , IconTrash } from "@tabler/icons-react";
+import { 
+  DoubleRightOutlined, 
+  PauseOutlined, 
+  EditOutlined, 
+  DeleteOutlined,
+  ClockCircleOutlined
+} from "@ant-design/icons";
 import dayjs from "dayjs";
 import axiosInstance from "../../utils/axios";
-import { Tooltip } from "antd";
-import noData from "../../assets/no-data.svg"
+import { Tooltip, Badge, Dropdown, Menu } from "antd";
+import noData from "../../assets/no-data.svg";
+import { MoreOutlined } from "@ant-design/icons";
 
-
-const ListView = ({ tasks, handleFetchTaskList , onEdit , onDelete }) => {
+const ListView = ({ tasks, handleFetchTaskList, onEdit, onDelete }) => {
   const [columns, setColumns] = useState({
-    "To-Do" : [],
-    "In-Progress" : [],
-    "Done" : []
+    "To-Do": [],
+    "In-Progress": [],
+    "Done": []
   });
 
-
   useEffect(() => {
-      setColumns({
-        "To-Do": tasks.filter((task) => task.status === "to-do"),
-        "In-Progress": tasks.filter((task) => task.status === "in-progress"),
-        "Done": tasks.filter((task) => task.status === "done"),
-      })
-  } , [tasks])
+    setColumns({
+      "To-Do": tasks.filter((task) => task.status === "to-do"),
+      "In-Progress": tasks.filter((task) => task.status === "in-progress"),
+      "Done": tasks.filter((task) => task.status === "done"),
+    });
+  }, [tasks]);
 
   const updateTaskStatus = async (task, targetStatus) => {
     try {
-      const response = await axiosInstance.put(
+      await axiosInstance.put(
         `/tasks/update?taskId=${task._id}`,
         { status: targetStatus.toLowerCase() }
       );
       handleFetchTaskList();
-      console.log("Updated Successfully");
     } catch (error) {
       console.error("Error updating task status:", error);
     }
@@ -67,7 +70,7 @@ const ListView = ({ tasks, handleFetchTaskList , onEdit , onDelete }) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
         {Object.keys(columns).map((status) => (
           <Column
             key={status}
@@ -83,50 +86,78 @@ const ListView = ({ tasks, handleFetchTaskList , onEdit , onDelete }) => {
   );
 };
 
-const Column = ({ status, tasks, moveTask , onEdit , onDelete }) => {
+const Column = ({ status, tasks, moveTask, onEdit, onDelete }) => {
   const [, drop] = useDrop({
     accept: "TASK",
     drop: (item) => moveTask(item, status),
   });
 
-  const bgColor = {
-    Done: "bg-green-200",
-    "To-Do": "bg-blue-200",
-    "In-Progress": "bg-yellow-200",
+  const statusConfig = {
+    "Done": {
+      bgColor: "bg-green-50",
+      borderColor: "border-green-200",
+      textColor: "text-green-800",
+      countColor: "bg-green-200 text-green-800"
+    },
+    "To-Do": {
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
+      textColor: "text-blue-800",
+      countColor: "bg-blue-200 text-blue-800"
+    },
+    "In-Progress": {
+      bgColor: "bg-amber-50",
+      borderColor: "border-amber-200",
+      textColor: "text-amber-800",
+      countColor: "bg-amber-200 text-amber-800"
+    }
   };
-  const headingColor = {
-    Done: "text-green-700",
-    "To-Do": "text-blue-700",
-    "In-Progress": "text-yellow-700",
-  };
+
+  const config = statusConfig[status];
 
   return (
     <div
       ref={drop}
-      className={`p-4 border rounded shadow-md min-h-[400px] ${bgColor[status]}`}
+      className={`p-4 border-2 rounded-xl ${config.bgColor} ${config.borderColor} min-h-[500px] transition-all duration-300 hover:shadow-lg`}
     >
-      <h3 className={`font-bold text-lg ${headingColor[status]} mb-4`}>
-        {status}
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className={`font-bold text-lg ${config.textColor}`}>
+          {status}
+        </h3>
+        <Badge 
+          count={tasks.length} 
+          showZero 
+          className={config.countColor}
+          style={{ backgroundColor: config.countColor.includes('bg-') ? '' : config.countColor }}
+        />
+      </div>
+      
       {tasks.length === 0 ? (
-        <div className="flex flex-col h-fit items-center justify-center">
+        <div className="flex flex-col h-full items-center justify-center py-8">
           <img
             src={noData}
-            alt="No Data"
-            className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28"
+            alt="No Tasks"
+            className="w-16 h-16 opacity-60 mb-3"
           />
-          <p className="text-gray-500 mt-2 text-sm sm:text-base lg:text-lg">
-            No Tasks
-          </p>
+          <p className="text-gray-400 text-sm">No tasks yet</p>
         </div>
       ) : (
-        tasks.map((task) => <DraggableTask key={task._id} task={task}  onEdit={onEdit}  onDelete={onDelete} />)
+        <div className="space-y-3">
+          {tasks.map((task) => (
+            <DraggableTask 
+              key={task._id} 
+              task={task}  
+              onEdit={onEdit}  
+              onDelete={onDelete} 
+            />
+          ))}
+        </div>
       )}
     </div>
   );
 };
 
-const DraggableTask = ({ task , onEdit , onDelete }) => {
+const DraggableTask = ({ task, onEdit, onDelete }) => {
   const [{ isDragging }, drag] = useDrag({
     type: "TASK",
     item: task,
@@ -135,63 +166,104 @@ const DraggableTask = ({ task , onEdit , onDelete }) => {
     }),
   });
 
-  const priorityIcons = {
-    low: <DoubleRightOutlined className="rotate-90 text-blue-600 text-xl" />,
-    high: <DoubleRightOutlined className="-rotate-90 text-red-600 text-xl" />,
-    medium: <PauseOutlined className="rotate-90 text-yellow-600 text-xl" />,
+  const priorityConfig = {
+    low: {
+      icon: <DoubleRightOutlined className="rotate-90 text-blue-500" />,
+      label: "Low",
+      color: "text-blue-600 bg-blue-100"
+    },
+    high: {
+      icon: <DoubleRightOutlined className="-rotate-90 text-red-500" />,
+      label: "High",
+      color: "text-red-600 bg-red-100"
+    },
+    medium: {
+      icon: <PauseOutlined className="rotate-90 text-amber-500" />,
+      label: "Medium",
+      color: "text-amber-600 bg-amber-100"
+    }
   };
+
+  const priority = priorityConfig[task.priority];
+
+  const menuItems = (
+    <Menu
+      items={[
+        {
+          key: 'edit',
+          label: 'Edit',
+          icon: <EditOutlined />,
+          onClick: () => onEdit(task)
+        },
+        {
+          key: 'delete',
+          label: 'Delete',
+          icon: <DeleteOutlined />,
+          danger: true,
+          onClick: () => onDelete(task)
+        }
+      ]}
+    />
+  );
+
+  const isOverdue = dayjs(task.dueDate).isBefore(dayjs(), 'day');
 
   return (
     <div
       ref={drag}
-      className={`p-4 border rounded  bg-white mb-2 cursor-pointer cardShadow ${
-        isDragging ? "opacity-50" : ""
-      }`}
+      className={`p-4 border rounded-lg bg-white cursor-grab transition-all duration-200 hover:shadow-md hover:border-blue-300 ${
+        isDragging ? "opacity-50 rotate-2 shadow-xl" : "opacity-100"
+      } ${isOverdue ? "border-red-200 bg-red-50" : "border-gray-200"}`}
     >
-      <div className="flex gap-2 justify-end items-center">
-            <IconEdit
-              size={18}
-              className="text-blue-600 cursor-pointer hover:scale-110 transition-transform"
-              onClick={() => onEdit(task)}
-            />
-            <IconTrash
-              size={18}
-              className="text-red-600 cursor-pointer hover:scale-110 transition-transform"
-              onClick={() => onDelete(task)}
-            />
-      </div>
-      <div className="flex justify-start items-center">
-        <h4 className="font-semibold text-red-700 text-sm md:text-base">
+      {/* Header with title and actions */}
+      <div className="flex justify-between items-start mb-3">
+        <h4 className="font-semibold text-gray-800 text-base line-clamp-2 flex-1 mr-2">
           {task.title}
         </h4>
+        
+        <Dropdown overlay={menuItems} trigger={['click']} placement="bottomRight">
+          <MoreOutlined className="text-gray-400 hover:text-gray-600 cursor-pointer p-1" />
+        </Dropdown>
       </div>
-      <p className="text-xs md:text-sm text-gray-600">{task.description}</p>
-      <div className="flex items-start md:items-center flex-col md:flex-row gap-0 md:gap-2  mt-1">
-        <span className={`font-bold text-sm text-gray-600`}>Updated at :</span>{" "}
-        <div className={`flex items-center gap-1`}>
-          <div className={`text-sm font-semibold text-gray-700`}>
-            {dayjs(task.updatedAt).format("DD MMM, YYYY [at] hh:mm A")}
+
+      {/* Description */}
+      {task.description && (
+        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          {task.description}
+        </p>
+      )}
+
+      {/* Priority and Due Date */}
+      <div className="flex items-center justify-between mb-3">
+        <Badge 
+          className={`px-2 py-1 rounded-full text-xs font-medium ${priority.color}`}
+        >
+          <span className="flex items-center gap-1">
+            {priority.icon}
+            {priority.label}
+          </span>
+        </Badge>
+
+        <Tooltip title={`Due: ${dayjs(task.dueDate).format("DD MMM, YYYY")}`}>
+          <div className={`flex items-center gap-1 text-sm ${isOverdue ? 'text-red-500' : 'text-gray-500'}`}>
+            <ClockCircleOutlined />
+            <span>{dayjs(task.dueDate).format("DD MMM")}</span>
           </div>
-        </div>
-      </div>
-      <div className="flex items-start md:items-center flex-col md:flex-row  gap-0 md:gap-2">
-        <span className={`font-bold text-sm text-gray-600`}>Created at :</span>{" "}
-        <div className={`flex items-center gap-1`}>
-          <div className={`text-sm font-semibold text-gray-700 `}>
-            {dayjs(task.createdAt).format("DD MMM, YYYY [at] hh:mm A")}
-          </div>
-        </div>
-      </div>
-      <div className="flex gap-2 items-center justify-between mt-2">
-       <Tooltip title={task.priority}>
-       <div>{priorityIcons[task.priority]}</div>
-       </Tooltip>
-        <Tooltip className="flex gap-2 items-center" title={"Due Date"}>
-        <IconClockFilled size={18} className="text-gray-700" />{" "}
-        <div className="text-sm">
-          {dayjs(task.dueDate).format("DD MMM, YYYY")}
-        </div>
         </Tooltip>
+      </div>
+
+      {/* Timestamps */}
+      <div className="border-t border-gray-100 pt-2">
+        <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+          <div>
+            <div className="font-medium">Created</div>
+            <div>{dayjs(task.createdAt).format("DD MMM")}</div>
+          </div>
+          <div>
+            <div className="font-medium">Updated</div>
+            <div>{dayjs(task.updatedAt).format("DD MMM")}</div>
+          </div>
+        </div>
       </div>
     </div>
   );
