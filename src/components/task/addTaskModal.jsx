@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, DatePicker, Button, App, ConfigProvider } from "antd";
+import { Modal, Form, Input, Select, DatePicker, Button, App, ConfigProvider  } from "antd";
 import dayjs from "dayjs";
 import axiosInstance from "../../utils/axios";
 import Loader from "../common/loader";
+import toast from "react-hot-toast";
+
+
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -17,7 +20,6 @@ const AddTaskModal = ({
 }) => {
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
-  const { message } = App.useApp();
 
   useEffect(() => {
     if (visible) {
@@ -54,11 +56,13 @@ const AddTaskModal = ({
           priority: values.priority,
         });
       }
-      onClose();
-      message.success(`Task ${actionType === 'edit' ? 'updated' : 'created'} successfully!`);
+      toast.success(`Task ${actionType === 'edit' ? 'updated' : 'created'} successfully!`);
+      form.resetFields();
+      setIsVisible(false);
+      
     } catch (error) {
       console.error(`Error ${actionType === "edit" ? "editing" : "creating"} task:`, error);
-      message.error(`Failed to ${actionType === 'edit' ? 'update' : 'create'} task`);
+      toast.error(`Failed to ${actionType === 'edit' ? 'update' : 'create'} task`);
     } finally {
       setIsLoading(false);
     }

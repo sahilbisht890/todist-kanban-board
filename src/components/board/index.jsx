@@ -95,7 +95,7 @@ const Board = () => {
         </Form>
       </Modal>
       
-      <div className="relative mt-20 px-4 max-w-6xl mx-auto">
+      <div className="relative mt-20 md:mt-32 px-4 max-w-6xl mx-auto">
         {boardLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-[2000] backdrop-blur-sm rounded-xl">
             <div className="text-center">
@@ -111,7 +111,9 @@ const Board = () => {
             Organize your tasks and collaborate with your team in one place
           </p>
         </div>
-        
+         
+         {
+          !boardLoading && boardList.length !== 0  && 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <div
             onClick={() => setIsVisible(true)}
@@ -124,7 +126,7 @@ const Board = () => {
             <p className="text-gray-500 text-sm mt-2 text-center">Create a new project board</p>
           </div>
           
-          {!boardLoading && boardList.map((board) => (
+          {boardList.map((board) => (
             <BoardCard
               key={board._id}
               board={board}
@@ -142,9 +144,11 @@ const Board = () => {
             </>
           )}
         </div>
+         }
+
         
         {!boardLoading && boardList.length === 0 && (
-          <div className="text-center py-12 bg-gray-50 rounded-xl mt-4">
+          <div className="text-center py-12  rounded-xl mt-4">
             <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
               <IconPlus size={40} className="text-gray-500" />
             </div>

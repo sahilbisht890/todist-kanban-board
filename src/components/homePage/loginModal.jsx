@@ -19,7 +19,7 @@ function LoginModal({ isVisible, setIsVisible }) {
       onClose();
     } catch (error) {
       console.log('Error while logging in', error);
-      message.error('Login failed. Please check your credentials.');
+      message.error(error?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }

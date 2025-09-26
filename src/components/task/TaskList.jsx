@@ -64,10 +64,8 @@ const TaskList = () => {
         payload.boardId = id;
         await axiosInstance.post("/tasks/create", payload);
         handleFetchTaskList();
-        message.success("Task created successfully!");
       } catch (error) {
         console.error("Error while creating task", error);
-        message.error("Failed to create task");
       }
     },
     [id, handleFetchTaskList, message]

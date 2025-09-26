@@ -118,7 +118,7 @@ const Column = ({ status, tasks, moveTask, onEdit, onDelete }) => {
   return (
     <div
       ref={drop}
-      className={`p-4 border-2 rounded-xl ${config.bgColor} ${config.borderColor} min-h-[500px] transition-all duration-300 hover:shadow-lg`}
+      className={`p-4 border-2 rounded-xl ${config.bgColor} ${config.borderColor} min-h-[500px] overflow-auto max-h-[800px] transition-all duration-300 hover:shadow-lg`}
     >
       <div className="flex items-center justify-between mb-4">
         <h3 className={`font-bold text-lg ${config.textColor}`}>

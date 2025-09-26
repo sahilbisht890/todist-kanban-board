@@ -5,6 +5,7 @@ export const ModalContext = createContext();
 const ModalProvider = ({ children }) => {
   const [loginVisible, setLoginVisible] = useState(false);
   const [signupVisible, setSignupVisible] = useState(false);
+  const [isAuthApiCalled, setIsAuthApiCalled] = useState(false);
   const featuresRef = useRef(null);
   const pricingRef = useRef(null);
 
@@ -17,7 +18,9 @@ const ModalProvider = ({ children }) => {
         signupVisible,
         setSignupVisible,
         featuresRef,
-        pricingRef
+        pricingRef,
+        isAuthApiCalled,
+        setIsAuthApiCalled
       }}
     >
       {children}

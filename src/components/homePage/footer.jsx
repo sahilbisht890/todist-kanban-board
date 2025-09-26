@@ -21,7 +21,7 @@ const Footer = () => {
                 size={40}
                 className="rounded border-2 border-spacing-3 border-red-600"
               />
-              <h2 className="text-2xl font-bold text-blue-700">Todoist</h2>
+              <h2 className="text-2xl font-bold text-red-600">Todoist</h2>
             </div>
             <p className="text-gray-600 max-w-sm mx-auto md:mx-0">
               A modern task management app to organize your projects, stay

@@ -6,15 +6,15 @@ import { ModalContext } from "../context";
 const AuthGuard = ({ children }) => {
   const location = useLocation();
   const { isAuthenticated } = useSelector((state) => state.user);
-  const { setLoginVisible } = useContext(ModalContext);
+  const { setLoginVisible , isAuthApiCalled } = useContext(ModalContext);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && isAuthApiCalled) {
       setLoginVisible(true);
     }
-  }, [isAuthenticated, setLoginVisible]);
+  }, [isAuthenticated, setLoginVisible , isAuthApiCalled]);
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && isAuthApiCalled) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
