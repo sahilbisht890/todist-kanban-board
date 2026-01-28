@@ -27,8 +27,7 @@ export default function Layout({ children }) {
   const apiCalled = useRef(false);
 
   // Routes that should SKIP auth check
-  const skipAuthRoutes = [
-    "/",              // Home
+  const skipAuthRoutes = [              // Home
     "/verify-email",        // Verify email (prefix match)
   ];
 

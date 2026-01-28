@@ -4,6 +4,7 @@ import { IconEye, IconEyeOff, IconBrandGoogle, IconBrandFacebook } from "@tabler
 import { ModalContext } from "../../context";
 import { loginUser } from "../../store/actions/user";
 import { useDispatch } from "react-redux";
+import GoogleButton from "../common/googleLoginBtn";
 
 function LoginModal({ isVisible, setIsVisible }) {
   const dispatch = useDispatch();
@@ -121,6 +122,7 @@ className="bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 h-12 rounded-l
             Sign In
           </Button>
         </Form.Item>
+        <GoogleButton/>
 
         {/* <Divider plain className="text-gray-400 text-xs">Or continue with</Divider> */}
 {/* 

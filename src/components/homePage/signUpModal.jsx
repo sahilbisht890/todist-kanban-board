@@ -8,6 +8,7 @@ import {
 } from "@tabler/icons-react";
 import { ModalContext } from "../../context";
 import axiosInstance from "../../utils/axios";
+import GoogleButton from "../common/googleLoginBtn";
 
 function SignupModal({ isVisible, setIsVisible }) {
   const [form] = Form.useForm();
@@ -134,6 +135,7 @@ function SignupModal({ isVisible, setIsVisible }) {
             Create Account
           </Button>
         </Form.Item>
+        <GoogleButton/>
 
         {/* <Divider plain className="text-gray-400 text-xs">
           Or sign up with
