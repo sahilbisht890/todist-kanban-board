@@ -132,17 +132,19 @@ const Navbar = () => {
           >
             Home
           </NavLink>
+          {isAuthenticated && (
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-base font-medium text-red-600 border-b-2 border-red-600"
+                  : "text-base font-medium cursor-pointer hover:text-red-600 hover:border-b-2 hover:border-red-600"
+              }
+            >
+              Dashboard
+            </NavLink>
+          )}
 
-          {/* <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              isActive
-                ? "text-base font-medium text-red-600 border-b-2 border-red-600"
-                : "text-base font-medium cursor-pointer hover:text-red-600 hover:border-b-2 hover:border-red-600"
-            }
-          >
-            Dashboard
-          </NavLink> */}
           <div
             className="text-base font-medium cursor-pointer hover:text-red-600  hover:border-b-2 hover:border-red-600"
             onClick={handleFeatureClick}
@@ -263,17 +265,19 @@ const Navbar = () => {
                 Home
               </NavLink>
 
-              <NavLink
-                to="/dashboard"
-                className={({ isActive }) =>
-                  `text-lg font-medium p-3 rounded-lg ${
-                    isActive ? "bg-red-100 text-red-600" : "hover:bg-gray-100"
-                  }`
-                }
-                onClick={closeMenu}
-              >
-                Dashboard
-              </NavLink>
+              {isAuthenticated && (
+                <NavLink
+                  to="/dashboard"
+                  className={({ isActive }) =>
+                    `text-lg font-medium p-3 rounded-lg ${
+                      isActive ? "bg-red-100 text-red-600" : "hover:bg-gray-100"
+                    }`
+                  }
+                  onClick={closeMenu}
+                >
+                  Dashboard
+                </NavLink>
+              )}
 
               <div
                 className="text-lg font-medium p-3 rounded-lg cursor-pointer hover:bg-gray-100"
