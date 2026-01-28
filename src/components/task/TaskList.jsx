@@ -113,6 +113,8 @@ const TaskList = () => {
 
   return (
     <>
+        {taskListLoading && <Loader />}
+
       {/* Delete Confirmation Modal */}
       <Modal
         open={isDeleteModalVisible}
@@ -160,7 +162,6 @@ const TaskList = () => {
       />
 
       <div className="relative mt-16 px-4 max-w-7xl mx-auto">
-        {taskListLoading && <Loader message="Loading tasks..." />}
 
         <div className="px-4 py-6 md:px-6">
           {/* Header Section - Always show header even when empty */}
