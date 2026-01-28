@@ -6,6 +6,7 @@ import { fetchBoardsList } from "../../store/actions/board";
 import { IconPlus } from "@tabler/icons-react";
 import { Button, Form, Modal, Input, Skeleton } from "antd";
 import axiosInstance from "../../utils/axios";
+import Loader from "../common/loader";
 
 const Board = () => {
   const navigate = useNavigate();
@@ -44,6 +45,9 @@ const Board = () => {
 
   return (
     <>
+    {
+      boardLoading && <Loader/>
+    }
       <Modal
         title={
           <div className="text-xl font-bold text-gray-800 text-center">
@@ -96,15 +100,6 @@ const Board = () => {
       </Modal>
       
       <div className="relative mt-20 md:mt-32 px-4 max-w-6xl mx-auto">
-        {boardLoading && (
-          <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-[2000] backdrop-blur-sm rounded-xl">
-            <div className="text-center">
-              <div className="loader border-t-4 border-blue-500 w-12 h-12 rounded-full animate-spin mx-auto"></div>
-              <p className="mt-3 text-gray-600">Loading your projects...</p>
-            </div>
-          </div>
-        )}
-        
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">Your Projects</h1>
           <p className="text-gray-500 max-w-lg mx-auto">
