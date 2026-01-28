@@ -11,19 +11,31 @@ function LoginModal({ isVisible, setIsVisible }) {
   const { setSignupVisible } = useContext(ModalContext);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async (values) => {
-    try {
-      setIsLoading(true);
-      await dispatch(loginUser(values));
-      message.success('Login successful!');
-      onClose();
-    } catch (error) {
-      console.log('Error while logging in', error);
-      message.error(error?.response?.data?.message || 'Login failed. Please check your credentials.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const handleLogin = async (values) => {
+  try {
+    setIsLoading(true);
+
+    const response = await dispatch(loginUser(values));
+    console.log("Login response:", response);
+
+    message.success("Login successful!");
+    onClose();
+
+  } catch (error) {
+    console.log("Error while logging in:", error);
+
+    const errorMessage =
+      typeof error === "string"
+        ? error
+        : error?.message || "Login failed. Please check your credentials.";
+
+    message.error(errorMessage);
+
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const onClose = () => {
     setIsVisible(false);

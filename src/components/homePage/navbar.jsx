@@ -133,7 +133,7 @@ const Navbar = () => {
             Home
           </NavLink>
 
-          <NavLink
+          {/* <NavLink
             to="/dashboard"
             className={({ isActive }) =>
               isActive
@@ -142,7 +142,7 @@ const Navbar = () => {
             }
           >
             Dashboard
-          </NavLink>
+          </NavLink> */}
           <div
             className="text-base font-medium cursor-pointer hover:text-red-600  hover:border-b-2 hover:border-red-600"
             onClick={handleFeatureClick}

@@ -4,11 +4,27 @@ export const loginUser = (userData) => async (dispatch) => {
   try {
     const response = await axiosInstance.post("/auth/login", userData);
     const { accessToken, user } = response.data;
-    dispatch({ type: "USER_LOGIN_SUCCESS", payload: user });
+
+    dispatch({
+      type: "USER_LOGIN_SUCCESS",
+      payload: user,
+    });
+
+    return user; // optional: allow chaining
   } catch (error) {
-    dispatch({ type: "USER_LOGIN_FAIL", payload: error.response?.data || error.message });
+    const errorPayload =
+      error.response?.data?.message || error.message || "Login failed";
+
+    dispatch({
+      type: "USER_LOGIN_FAIL",
+      payload: errorPayload,
+    });
+
+    // IMPORTANT: rethrow error
+    throw errorPayload;
   }
 };
+
 
 export const logoutUser = () => async (dispatch) => {
   try {

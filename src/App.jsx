@@ -5,6 +5,7 @@ import TaskList from "./components/task/TaskList";
 import Board from "./components/board";
 import AuthGuard from "./utils/authGuard"
 import HomePage from "./components/page/home";
+import VerifyEmail from "./components/common/verifyEmail";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
                         <TaskList/>
                   </AuthGuard> 
                   } />
+                <Route path="/verify-email/:token" element={<VerifyEmail />} />
                 <Route path="/dashboard" element={
                 <AuthGuard>
                    <Board/>

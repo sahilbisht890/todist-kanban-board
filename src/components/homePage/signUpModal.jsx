@@ -18,7 +18,7 @@ function SignupModal({ isVisible, setIsVisible }) {
     try {
       setIsLoading(true);
       const response = await axiosInstance.post("/auth/signup", values);
-      message.success("Account created successfully!");
+      message.success("Please verify your email!");
       onClose();
     } catch (error) {
       console.log("Error while signing up", error);
