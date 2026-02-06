@@ -17,8 +17,6 @@ const handleLogin = async (values) => {
     setIsLoading(true);
 
     const response = await dispatch(loginUser(values));
-    console.log("Login response:", response);
-
     message.success("Login successful!");
     onClose();
 

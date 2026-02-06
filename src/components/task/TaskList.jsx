@@ -171,7 +171,7 @@ const TaskList = () => {
                 type="text"
                 icon={<ArrowLeftOutlined />}
                 onClick={handleBack}
-                className="flex items-center text-gray-600 hover:text-blue-600 mr-3"
+                className="flex items-center bg-gray-200 text-gray-600 transition-all duration-300 hover:text-blue-600 mr-3"
               >
                 Back
               </Button>

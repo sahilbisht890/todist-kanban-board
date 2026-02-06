@@ -19,7 +19,8 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     loginVisible,
@@ -111,7 +112,7 @@ const Navbar = () => {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-red-50 via-red-100 to-red-200 shadow-md py-5 px-8">
       <div className="flex justify-between items-center ">
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center cursor-pointer" onClick={() => navigate("/")}>
           <IconListCheck
             color="rgb(220 38 38)"
             size={40}

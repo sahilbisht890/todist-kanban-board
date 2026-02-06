@@ -63,9 +63,6 @@ const AddTaskModal = ({
           priority: values.priority,
         });
       }
-      toast.success(
-        `Task ${actionType === "edit" ? "updated" : "created"} successfully!`,
-      );
       form.resetFields();
       setIsVisible(false);
     } catch (error) {

@@ -123,7 +123,9 @@ const FAQ = () => {
           <p className="text-gray-600 mb-6">
             Still have questions? We're here to help.
           </p>
-          <button className="bg-gradient-to-r from-red-600 to-orange-500 text-white font-medium py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300">
+          <button 
+            onClick={() => window.location.href = "mailto:sahilbisht380@gmail.com"}
+          className="bg-gradient-to-r from-red-600 to-orange-500 text-white font-medium py-3 px-8 rounded-lg hover:shadow-lg transition-all duration-300">
             Contact Support
           </button>
         </div>

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { 
-  DoubleRightOutlined, 
-  PauseOutlined, 
-  EditOutlined, 
+import {
+  DoubleRightOutlined,
+  PauseOutlined,
+  EditOutlined,
   DeleteOutlined,
-  ClockCircleOutlined
+  ClockCircleOutlined,
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import axiosInstance from "../../utils/axios";
@@ -18,23 +18,22 @@ const ListView = ({ tasks, handleFetchTaskList, onEdit, onDelete }) => {
   const [columns, setColumns] = useState({
     "To-Do": [],
     "In-Progress": [],
-    "Done": []
+    Done: [],
   });
 
   useEffect(() => {
     setColumns({
       "To-Do": tasks.filter((task) => task.status === "to-do"),
       "In-Progress": tasks.filter((task) => task.status === "in-progress"),
-      "Done": tasks.filter((task) => task.status === "done"),
+      Done: tasks.filter((task) => task.status === "done"),
     });
   }, [tasks]);
 
   const updateTaskStatus = async (task, targetStatus) => {
     try {
-      await axiosInstance.put(
-        `/tasks/update?taskId=${task._id}`,
-        { status: targetStatus.toLowerCase() }
-      );
+      await axiosInstance.put(`/tasks/update?taskId=${task._id}`, {
+        status: targetStatus.toLowerCase(),
+      });
       handleFetchTaskList();
     } catch (error) {
       console.error("Error updating task status:", error);
@@ -93,24 +92,24 @@ const Column = ({ status, tasks, moveTask, onEdit, onDelete }) => {
   });
 
   const statusConfig = {
-    "Done": {
+    Done: {
       bgColor: "bg-green-50",
       borderColor: "border-green-200",
       textColor: "text-green-800",
-      countColor: "bg-green-200 text-green-800"
+      countColor: "bg-green-200 text-green-800",
     },
     "To-Do": {
       bgColor: "bg-blue-50",
       borderColor: "border-blue-200",
       textColor: "text-blue-800",
-      countColor: "bg-blue-200 text-blue-800"
+      countColor: "bg-blue-200 text-blue-800",
     },
     "In-Progress": {
       bgColor: "bg-amber-50",
       borderColor: "border-amber-200",
       textColor: "text-amber-800",
-      countColor: "bg-amber-200 text-amber-800"
-    }
+      countColor: "bg-amber-200 text-amber-800",
+    },
   };
 
   const config = statusConfig[status];
@@ -121,17 +120,21 @@ const Column = ({ status, tasks, moveTask, onEdit, onDelete }) => {
       className={`p-4 border-2 rounded-xl ${config.bgColor} ${config.borderColor} min-h-[500px] overflow-auto max-h-[800px] transition-all duration-300 hover:shadow-lg`}
     >
       <div className="flex items-center justify-between mb-4">
-        <h3 className={`font-bold text-lg ${config.textColor}`}>
-          {status}
-        </h3>
-        <Badge 
-          count={tasks.length} 
-          showZero 
-          className={config.countColor}
-          style={{ backgroundColor: config.countColor.includes('bg-') ? '' : config.countColor }}
-        />
+        <h3 className={`font-bold text-lg ${config.textColor}`}>{status}</h3>
+        <div
+          className={`
+    inline-flex items-center justify-center
+    min-w-[20px] h-[20px]
+    px-1
+    rounded-full
+    text-xs font-semibold text-white
+    ${config.countColor}
+  `}
+        >
+          {tasks.length}
+        </div>
       </div>
-      
+
       {tasks.length === 0 ? (
         <div className="flex flex-col h-full items-center justify-center py-8">
           <img
@@ -144,11 +147,11 @@ const Column = ({ status, tasks, moveTask, onEdit, onDelete }) => {
       ) : (
         <div className="space-y-3">
           {tasks.map((task) => (
-            <DraggableTask 
-              key={task._id} 
-              task={task}  
-              onEdit={onEdit}  
-              onDelete={onDelete} 
+            <DraggableTask
+              key={task._id}
+              task={task}
+              onEdit={onEdit}
+              onDelete={onDelete}
             />
           ))}
         </div>
@@ -170,18 +173,18 @@ const DraggableTask = ({ task, onEdit, onDelete }) => {
     low: {
       icon: <DoubleRightOutlined className="rotate-90 text-blue-500" />,
       label: "Low",
-      color: "text-blue-600 bg-blue-100"
+      color: "text-blue-600 bg-blue-100",
     },
     high: {
       icon: <DoubleRightOutlined className="-rotate-90 text-red-500" />,
       label: "High",
-      color: "text-red-600 bg-red-100"
+      color: "text-red-600 bg-red-100",
     },
     medium: {
       icon: <PauseOutlined className="rotate-90 text-amber-500" />,
       label: "Medium",
-      color: "text-amber-600 bg-amber-100"
-    }
+      color: "text-amber-600 bg-amber-100",
+    },
   };
 
   const priority = priorityConfig[task.priority];
@@ -190,23 +193,23 @@ const DraggableTask = ({ task, onEdit, onDelete }) => {
     <Menu
       items={[
         {
-          key: 'edit',
-          label: 'Edit',
+          key: "edit",
+          label: "Edit",
           icon: <EditOutlined />,
-          onClick: () => onEdit(task)
+          onClick: () => onEdit(task),
         },
         {
-          key: 'delete',
-          label: 'Delete',
+          key: "delete",
+          label: "Delete",
           icon: <DeleteOutlined />,
           danger: true,
-          onClick: () => onDelete(task)
-        }
+          onClick: () => onDelete(task),
+        },
       ]}
     />
   );
 
-  const isOverdue = dayjs(task.dueDate).isBefore(dayjs(), 'day');
+  const isOverdue = dayjs(task.dueDate).isBefore(dayjs(), "day");
 
   return (
     <div
@@ -220,8 +223,12 @@ const DraggableTask = ({ task, onEdit, onDelete }) => {
         <h4 className="font-semibold text-gray-800 text-base line-clamp-2 flex-1 mr-2">
           {task.title}
         </h4>
-        
-        <Dropdown overlay={menuItems} trigger={['click']} placement="bottomRight">
+
+        <Dropdown
+          overlay={menuItems}
+          trigger={["click"]}
+          placement="bottomRight"
+        >
           <MoreOutlined className="text-gray-400 hover:text-gray-600 cursor-pointer p-1" />
         </Dropdown>
       </div>
@@ -235,7 +242,7 @@ const DraggableTask = ({ task, onEdit, onDelete }) => {
 
       {/* Priority and Due Date */}
       <div className="flex items-center justify-between mb-3">
-        <Badge 
+        <Badge
           className={`px-2 py-1 rounded-full text-xs font-medium ${priority.color}`}
         >
           <span className="flex items-center gap-1">
@@ -245,7 +252,9 @@ const DraggableTask = ({ task, onEdit, onDelete }) => {
         </Badge>
 
         <Tooltip title={`Due: ${dayjs(task.dueDate).format("DD MMM, YYYY")}`}>
-          <div className={`flex items-center gap-1 text-sm ${isOverdue ? 'text-red-500' : 'text-gray-500'}`}>
+          <div
+            className={`flex items-center gap-1 text-sm ${isOverdue ? "text-red-500" : "text-gray-500"}`}
+          >
             <ClockCircleOutlined />
             <span>{dayjs(task.dueDate).format("DD MMM")}</span>
           </div>

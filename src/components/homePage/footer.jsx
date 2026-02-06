@@ -54,31 +54,31 @@ const Footer = () => {
           </div>
 
           {/* Social Media */}
-          <div className="flex-1 text-center md:text-left md:flex md:flex-col md:items-end">
+          <div className="flex-1 text-center md:text-right  md:flex md:flex-col md:items-end">
             <h3 className="text-lg font-semibold text-gray-800 mb-3">
               Connect With Us
             </h3>
             <div className="flex justify-center md:justify-start gap-4">
               <a
-                href="#"
+                href="https://github.com/sahilbisht890"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <IconBrandGithub size={22} />
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/sahil-bisht-234b92226/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <IconBrandLinkedin size={22} />
               </a>
               <a
-                href="#"
-                className="text-gray-600 hover:text-blue-600 transition-colors"
-              >
-                <IconBrandTwitter size={22} />
-              </a>
-              <a
-                href="mailto:support@todoist.com"
+                href="mailto:sahilbisht380@gmail.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <IconMail size={22} />
